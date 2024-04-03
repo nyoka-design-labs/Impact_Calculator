@@ -1,3 +1,15 @@
+let gwpChart;
+let pecChart;
+
+document.addEventListener('DOMContentLoaded', function() {
+    initCharts(); // Initialize empty charts or with default data
+});
+
+document.querySelector('form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent form from causing a page reload
+    calculateAndDisplayWaste();
+});
+
 function multiplyMapValues(map, factor) {
     let sum = 0;
     map.forEach((value) => {
@@ -5,6 +17,12 @@ function multiplyMapValues(map, factor) {
     });
     return sum;
   }
+  function updateChart(chart, newData) {
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data = newData; // Update the dataset data
+    });
+    chart.update();
+}
 
 function calculateAndDisplayWaste() {
     const numberOfGlowSticks = document.getElementById("numberOfGlowSticks").value;
@@ -39,20 +57,20 @@ function calculateAndDisplayWaste() {
         ["average_enzyme", 0.189]
     ])
     // Raw values Production Imapct
-    csl_gwp_total = multiplyMapValues(csl_gwp, csl_weight); // SHOW THIS VALUE
-    csl_pec_total = multiplyMapValues(csl_pec, csl_weight); // SHOW THIS VALUE
+    csl_gwp_total = multiplyMapValues(csl_gwp, (csl_weight * numberOfGlowSticks));
+    csl_pec_total = multiplyMapValues(csl_pec, (csl_weight * numberOfGlowSticks));
 
-    lb_gwp_total = multiplyMapValues(lb_gwp, lb_weight); // SHOW THIS VALUE
-    lb_pec_total = multiplyMapValues(lb_pec, lb_weight); // SHOW THIS VALUE
+    lb_gwp_total = multiplyMapValues(lb_gwp, (lb_weight * numberOfGlowSticks));
+    lb_pec_total = multiplyMapValues(lb_pec, (lb_weight * numberOfGlowSticks));
 
 
     // Percecnt Difference Values Production Imapct
-    gwp_per_diff = ((lb_gwp_total - csl_gwp_total) / (lb_gwp_total + csl_gwp_total)) * 100; // SHOW THIS VALUE
-    pec_per_diff = ((lb_pec_total - csl_pec_total) / (lb_pec_total + csl_pec_total)) * 100; // SHOW THIS VALUE
+    gwp_per_diff = ((lb_gwp_total - csl_gwp_total) / (lb_gwp_total + csl_gwp_total)) * 100;
+    pec_per_diff = ((lb_pec_total - csl_pec_total) / (lb_pec_total + csl_pec_total)) * 100;
 
     // Raw Values Product Impact
-    csl_p = (csl_pi.get("p") + csl_pi.get("pp")) * numberOfGlowSticks; // SHOW THIS VALUE
-    csl_hr = csl_pi.get("hr") * numberOfGlowSticks; // SHOW THIS VALUE
+    csl_p = (csl_pi.get("p") + csl_pi.get("pp")) * numberOfGlowSticks;
+    csl_hr = csl_pi.get("hr") * numberOfGlowSticks;
     
     const resultHTML = `
         <h3>Impact Comparison</h3>
@@ -64,10 +82,69 @@ function calculateAndDisplayWaste() {
         <p>Cyulum Snap Lights: ${csl_pec_total} MJ</p>
         <p>Lux Bio Glow: ${lb_pec_total} MJ<p>
         <p>Percent Difference: ${pec_per_diff}%<p>
-        <p><strong>Competitor Plastic Usage (kg):</strong> ${csl_p} kg</p>
+        <p><strong>Competitor Plastic Usage (kg):</strong> ${csl_p} g</p>
         <p><strong>Competitor Harmful Reagents (ml):</strong> ${csl_hr} ml</p>
     `;
     const resultDiv = document.getElementById("result");
     resultDiv.innerHTML = resultHTML;
-    
+
+    updateChart(gwpChart, [csl_gwp_total, lb_gwp_total]);
+    updateChart(pecChart, [csl_pec_total, lb_pec_total]);
 }
+
+function initCharts() {
+    // Render GWP Chart
+    const gwpCtx = document.getElementById('gwpChart').getContext('2d');
+    gwpChart = new Chart(gwpCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Cyulum Snap Lights', 'Lux Bio Glow'],
+            datasets: [{
+                label: 'Global Warming Potential (kg CO2)',
+                data: [], // Initialize with empty data
+                backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
+                borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Global Warming Potential Comparison',
+                    font: { size: 18 }
+                }
+            }
+        }
+    });
+
+    // Render PEC Chart
+    const pecCtx = document.getElementById('pecChart').getContext('2d');
+    pecChart = new Chart(pecCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Cyulum Snap Lights', 'Lux Bio Glow'],
+            datasets: [{
+                label: 'Primary Energy Consumption (MJ)',
+                data: [], // Initialize with empty data
+                backgroundColor: ['rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)'],
+                borderColor: ['rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Primary Energy Consumption Comparison',
+                    font: { size: 18 }
+                }
+            }
+        }
+    });
+}
+
+
+
