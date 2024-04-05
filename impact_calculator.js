@@ -7,17 +7,6 @@ document.querySelector('form').addEventListener('submit', function(event) {
     calculateAndDisplayWaste();
 });
 
-document.querySelector('form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent form from causing a page reload
-    calculateAndDisplayWaste();
-
-    // Scroll to the top of the form
-    window.scrollTo({
-        top: event.target.offsetTop,
-        behavior: 'smooth'
-    });
-});
-
 function multiplyMapValues(map, factor) {
     let sum = 0;
     map.forEach((value) => {
