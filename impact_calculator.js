@@ -3,7 +3,7 @@ let pecChart;
 
 
 document.querySelector('form').addEventListener('submit', function(event) {
-    // event.preventDefault(); // Prevent form from causing a page reload
+    event.preventDefault(); // Prevent form from causing a page reload
     calculateAndDisplayWaste();
 });
 
@@ -81,17 +81,17 @@ function calculateAndDisplayWaste() {
     csl_hr = csl_pi.get("hr") * numberOfGlowSticks;
     
     const resultHTML = `
-        <h3>Impact Comparison</h3>
+        <h3 style="text-align: center;">Impact Comparison</h3>
         <p><strong>Global Warming Potential (kg CO2):</strong></p>
-        <p>Cyulum Snap Lights: ${csl_gwp_total.toFixed(3)} kg</p>
-        <p>Lux Bio Glow: ${lb_gwp_total.toFixed(3)} kg<p>
-        <p>Percent Difference: ${gwp_per_diff.toFixed(3)}%<p>
+        <p>Cyulum Snap Lights: ${Number(csl_gwp_total.toFixed(3)).toLocaleString()} kg</p>
+        <p>Lux Bio Glow: ${Number(lb_gwp_total.toFixed(3)).toLocaleString()} kg<p>
+        <p>Percent Difference: ${Number(gwp_per_diff.toFixed(3)).toLocaleString()}%<p>
         <p><strong>Primary Energy Consumption (MJ):</strong></p>
-        <p>Cyulum Snap Lights: ${csl_pec_total.toFixed(3)} MJ</p>
-        <p>Lux Bio Glow: ${lb_pec_total.toFixed(3)} MJ<p>
-        <p>Percent Difference: ${pec_per_diff.toFixed(3)}%<p>
-        <p><strong>Competitor Plastic Usage (kg):</strong> ${csl_p.toFixed(1)} g</p>
-        <p><strong>Competitor Harmful Reagents (ml):</strong> ${csl_hr.toFixed(1)} ml</p>
+        <p>Cyulum Snap Lights: ${Number(csl_pec_total.toFixed(3)).toLocaleString()} MJ</p>
+        <p>Lux Bio Glow: ${Number(lb_pec_total.toFixed(3)).toLocaleString()} MJ<p>
+        <p>Percent Difference: ${Number(pec_per_diff.toFixed(3)).toLocaleString()}%<p>
+        <p><strong>Competitor Plastic Usage (kg):</strong> ${Number(csl_p.toFixed(0)).toLocaleString()} kg</p>
+        <p><strong>Competitor Harmful Reagents (ml):</strong> ${Number(csl_hr.toFixed(0)).toLocaleString()} ml</p>
     `;
 
     document.body.style.height = "auto"; // prevents cutoff from top of page
