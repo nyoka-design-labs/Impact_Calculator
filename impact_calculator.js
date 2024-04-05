@@ -1,13 +1,21 @@
 let gwpChart;
 let pecChart;
 
-document.addEventListener('DOMContentLoaded', function() {
-    initCharts(); // Initialize empty charts or with default data
+
+document.querySelector('form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent form from causing a page reload
+    calculateAndDisplayWaste();
 });
 
 document.querySelector('form').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent form from causing a page reload
     calculateAndDisplayWaste();
+
+    // Scroll to the top of the form
+    window.scrollTo({
+        top: event.target.offsetTop,
+        behavior: 'smooth'
+    });
 });
 
 function multiplyMapValues(map, factor) {
@@ -73,20 +81,27 @@ function calculateAndDisplayWaste() {
     csl_hr = csl_pi.get("hr") * numberOfGlowSticks;
     
     const resultHTML = `
-        <h3>Impact Comparison</h3>
+        <h3 style="text-align: center;">Impact Comparison</h3>
         <p><strong>Global Warming Potential (kg CO2):</strong></p>
-        <p>Cyulum Snap Lights: ${csl_gwp_total} kg</p>
-        <p>Lux Bio Glow: ${lb_gwp_total} kg<p>
-        <p>Percent Difference: ${gwp_per_diff}%<p>
+        <p>Cyulum Snap Lights: ${Number(csl_gwp_total.toFixed(3)).toLocaleString()} kg</p>
+        <p>Lux Bio Glow: ${Number(lb_gwp_total.toFixed(3)).toLocaleString()} kg<p>
+        <p>Percent Difference: ${Number(gwp_per_diff.toFixed(3)).toLocaleString()}%<p>
         <p><strong>Primary Energy Consumption (MJ):</strong></p>
-        <p>Cyulum Snap Lights: ${csl_pec_total} MJ</p>
-        <p>Lux Bio Glow: ${lb_pec_total} MJ<p>
-        <p>Percent Difference: ${pec_per_diff}%<p>
-        <p><strong>Competitor Plastic Usage (kg):</strong> ${csl_p} g</p>
-        <p><strong>Competitor Harmful Reagents (ml):</strong> ${csl_hr} ml</p>
+        <p>Cyulum Snap Lights: ${Number(csl_pec_total.toFixed(3)).toLocaleString()} MJ</p>
+        <p>Lux Bio Glow: ${Number(lb_pec_total.toFixed(3)).toLocaleString()} MJ<p>
+        <p>Percent Difference: ${Number(pec_per_diff.toFixed(3)).toLocaleString()}%<p>
+        <p><strong>Competitor Plastic Usage (kg):</strong> ${Number(csl_p.toFixed(0)).toLocaleString()} kg</p>
+        <p><strong>Competitor Harmful Reagents (ml):</strong> ${Number(csl_hr.toFixed(0)).toLocaleString()} ml</p>
     `;
+
+    document.body.style.height = "auto"; // prevents cutoff from top of page
+
     const resultDiv = document.getElementById("result");
     resultDiv.innerHTML = resultHTML;
+
+    const chartDiv = document.getElementById("charts");
+    chartDiv.innerHTML = `<canvas id="gwpChart"></canvas><canvas id="pecChart"></canvas>`
+    initCharts();
 
     updateChart(gwpChart, [csl_gwp_total, lb_gwp_total]);
     updateChart(pecChart, [csl_pec_total, lb_pec_total]);
@@ -115,6 +130,15 @@ function initCharts() {
                     text: 'Global Warming Potential Comparison',
                     font: { size: 18 }
                 }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'kg CO2'
+                    }
+                }
             }
         }
     });
@@ -140,6 +164,15 @@ function initCharts() {
                     display: true,
                     text: 'Primary Energy Consumption Comparison',
                     font: { size: 18 }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'MJ'
+                    }
                 }
             }
         }
