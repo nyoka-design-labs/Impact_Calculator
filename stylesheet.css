@@ -1,14 +1,15 @@
 body {
     font-family: Arial, sans-serif;
     display: flex;
+    color: #ffffff;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0;
+    background-color: #000000;
 }
 
 .calculator {
-    background-color: #fff;
+    background-color: #000000;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -25,7 +26,7 @@ body {
 
 button {
     padding: 10px;
-    background-color: #fbff00;
+    background-color: rgb(251, 255, 0);
     color: black;
     border: none;
     border-radius: 15px;
@@ -35,7 +36,7 @@ button {
 }
 
 button:hover {
-    background-color: #fdff9a;
+    background-color: #b2b500;
 }
 
 #result {

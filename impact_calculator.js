@@ -1,7 +1,3 @@
-let gwpChart;
-let pecChart;
-
-
 document.querySelector('form').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent form from causing a page reload
     calculateAndDisplayWaste();
