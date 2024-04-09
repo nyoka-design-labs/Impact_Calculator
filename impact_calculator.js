@@ -7,17 +7,6 @@ document.querySelector('form').addEventListener('submit', function(event) {
     calculateAndDisplayWaste();
 });
 
-document.querySelector('form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent form from causing a page reload
-    calculateAndDisplayWaste();
-
-    // Scroll to the top of the form
-    window.scrollTo({
-        top: event.target.offsetTop,
-        behavior: 'smooth'
-    });
-});
-
 function multiplyMapValues(map, factor) {
     let sum = 0;
     map.forEach((value) => {
@@ -81,17 +70,51 @@ function calculateAndDisplayWaste() {
     csl_hr = csl_pi.get("hr") * numberOfGlowSticks;
     
     const resultHTML = `
-        <h3 style="text-align: center;">Impact Comparison</h3>
-        <p><strong>Global Warming Potential (kg CO2):</strong></p>
-        <p>Cyulum Snap Lights: ${Number(csl_gwp_total.toFixed(3)).toLocaleString()} kg</p>
-        <p>Lux Bio Glow: ${Number(lb_gwp_total.toFixed(3)).toLocaleString()} kg<p>
-        <p>Percent Difference: ${Number(gwp_per_diff.toFixed(3)).toLocaleString()}%<p>
-        <p><strong>Primary Energy Consumption (MJ):</strong></p>
-        <p>Cyulum Snap Lights: ${Number(csl_pec_total.toFixed(3)).toLocaleString()} MJ</p>
-        <p>Lux Bio Glow: ${Number(lb_pec_total.toFixed(3)).toLocaleString()} MJ<p>
-        <p>Percent Difference: ${Number(pec_per_diff.toFixed(3)).toLocaleString()}%<p>
-        <p><strong>Competitor Plastic Usage (kg):</strong> ${Number(csl_p.toFixed(0)).toLocaleString()} kg</p>
-        <p><strong>Competitor Harmful Reagents (ml):</strong> ${Number(csl_hr.toFixed(0)).toLocaleString()} ml</p>
+        <div class="header-div">
+        <h3>Impact summary for ${Number(numberOfGlowSticks).toLocaleString()} glow sticks</h3>
+        </div>
+
+        <div class="data-div">
+        <p><b>${Number(csl_p.toFixed(0)).toLocaleString()}</b> kgs plastic</p>
+        <p><b>${Number(csl_hr.toFixed(0)).toLocaleString()}</b> ml harmful chemicals</p>
+        <p><b>${Number(csl_gwp_total.toFixed(0)).toLocaleString()}</b> kg CO2</p>
+        </div>
+
+        <div class="header-div">
+        <h3>We can reduce your impact by ~92%</h3>
+        </div>
+
+        <div class="graph-div" style="width:50%; float:left;">
+        <p class="data" style="font-size: 20px;"><b>Plastic Pollution</b></p>
+        <p class="data" style="font-size: 20px;"><b>100% reduction</b></p>
+        <br>
+        <p class="data">Snap Light &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Lux Bio</p>
+        <p class="data">${Number(csl_gwp_total.toFixed(0)).toLocaleString()} kg &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ${0} kg</p>
+        <br>
+        <div class="yellow-circle">
+        <p class="data"><b>save x kg plastic</b></p>
+        <p class="data"><b>(100% reduction)</b></p>
+        </div>
+        <br>
+        <div id="chart1">
+        </div>
+        </div>
+
+        <div class="graph-div" style="width:50%; float:right;">
+        <p class="data" style="font-size: 20px;"><b>Carbon Emissions</b></p>
+        <p class="data" style="font-size: 20px;"><b>100% reduction</b></p>
+        <br>
+        <p class="data">Snap Light &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Lux Bio</p>
+        <p class="data">${Number(csl_gwp_total.toFixed(0)).toLocaleString()} kg &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ${0} kg</p>
+        <br>
+        <div class="yellow-circle">
+        <p class="data"><b>save x kg CO2</b></p>
+        <p class="data"><b>(100% reduction)</b></p>
+        </div>
+        <br>
+        <div id="chart2">
+        </div>
+        </div>
     `;
 
     document.body.style.height = "auto"; // prevents cutoff from top of page
@@ -99,8 +122,12 @@ function calculateAndDisplayWaste() {
     const resultDiv = document.getElementById("result");
     resultDiv.innerHTML = resultHTML;
 
-    const chartDiv = document.getElementById("charts");
-    chartDiv.innerHTML = `<canvas id="gwpChart"></canvas><canvas id="pecChart"></canvas>`
+    const chart1Div = document.getElementById("chart1");
+    chart1Div.innerHTML = `<canvas id="gwpChart"></canvas>`
+
+    const chart2Div = document.getElementById("chart2");
+    chart2Div.innerHTML = `<canvas id="pecChart"></canvas>`
+
     initCharts();
 
     updateChart(gwpChart, [csl_gwp_total, lb_gwp_total]);
@@ -117,8 +144,8 @@ function initCharts() {
             datasets: [{
                 label: 'Global Warming Potential (kg CO2)',
                 data: [], // Initialize with empty data
-                backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
-                borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+                backgroundColor: ['rgba(10, 10, 10, 0.2)', 'rgba(10, 10, 10, 0.2)'],
+                borderColor: ['rgba(0, 0, 0, 1)', 'rgba(0, 0, 0, 1)'],
                 borderWidth: 1
             }]
         },
@@ -127,7 +154,7 @@ function initCharts() {
                 legend: { display: false },
                 title: {
                     display: true,
-                    text: 'Global Warming Potential Comparison',
+                    text: 'Global Warming Potential',
                     font: { size: 18 }
                 }
             },
@@ -137,6 +164,14 @@ function initCharts() {
                     title: {
                         display: true,
                         text: 'kg CO2'
+                    },
+                    grid: {
+                        display: false // Remove the background grid
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false // Remove the background grid
                     }
                 }
             }
@@ -152,8 +187,8 @@ function initCharts() {
             datasets: [{
                 label: 'Primary Energy Consumption (MJ)',
                 data: [], // Initialize with empty data
-                backgroundColor: ['rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)'],
-                borderColor: ['rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)'],
+                backgroundColor: ['rgba(10, 10, 10, 0.2)', 'rgba(10, 10, 10, 0.2)'],
+                borderColor: ['rgba(0, 0, 0, 1)', 'rgba(0, 0, 0, 1)'],
                 borderWidth: 1
             }]
         },
@@ -162,7 +197,7 @@ function initCharts() {
                 legend: { display: false },
                 title: {
                     display: true,
-                    text: 'Primary Energy Consumption Comparison',
+                    text: 'Primary Energy Consumption',
                     font: { size: 18 }
                 }
             },
@@ -172,6 +207,14 @@ function initCharts() {
                     title: {
                         display: true,
                         text: 'MJ'
+                    },
+                    grid: {
+                        display: false // Remove the background grid
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false // Remove the background grid
                     }
                 }
             }
@@ -181,3 +224,13 @@ function initCharts() {
 
 
 
+{/* <p style="font-size: 20px;"><strong>Global Warming Potential (kg CO2):</strong></p>
+<p style="font-size: 20px;">Cyulum Snap Lights: ${Number(csl_gwp_total.toFixed(0)).toLocaleString()} kg</p>
+<p style="font-size: 20px;">Lux Bio Glow: ${Number(lb_gwp_total.toFixed(0)).toLocaleString()} kg<p>
+<p style="font-size: 20px;">Percent Difference: ${Number(gwp_per_diff.toFixed(0)).toLocaleString()}%<p>
+<p style="font-size: 20px;"><strong>Primary Energy Consumption (MJ):</strong></p>
+<p style="font-size: 20px;">Cyulum Snap Lights: ${Number(csl_pec_total.toFixed(0)).toLocaleString()} MJ</p>
+<p style="font-size: 20px;">Lux Bio Glow: ${Number(lb_pec_total.toFixed(0)).toLocaleString()} MJ<p>
+<p style="font-size: 20px;">Percent Difference: ${Number(pec_per_diff.toFixed(0)).toLocaleString()}%<p>
+<p style="font-size: 20px;"><strong>Competitor Plastic Usage (kg):</strong> ${Number(csl_p.toFixed(0)).toLocaleString()} kg</p>
+<p style="font-size: 20px;"><strong>Competitor Harmful Reagents (ml):</strong> ${Number(csl_hr.toFixed(0)).toLocaleString()} ml</p> */}
