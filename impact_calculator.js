@@ -27,8 +27,8 @@ function calculateAndDisplayWaste() {
     const lb_weight = 20 / 1000; // kg/product PLACEHOLDER VALUE
 
     const csl_pi = new Map([ // Cyulum snap lights product impact
-        ["p", 15], // g
-        ["pp", 2], // g
+        ["p", 0.015], // g
+        ["pp", 0.002], // g
         ["hr", 10.6] // ml
     ])
 
@@ -45,12 +45,12 @@ function calculateAndDisplayWaste() {
     ])
 
     const lb_gwp = new Map([ // Lux bio glow global warming potential (kg CO2/kg product)
-        ["pha", 0],
+        ["pha", 0.01],
         ["average_enzyme", 0.01446]
     ])
 
     const lb_pec = new Map([ // Lux bio glow primary energy consumption (MJ/kg product)
-        ["pha", 0],
+        ["pha", 0.5],
         ["average_enzyme", 0.189]
     ])
     // Raw values Production Imapct
@@ -60,11 +60,13 @@ function calculateAndDisplayWaste() {
     lb_gwp_total = multiplyMapValues(lb_gwp, (lb_weight * numberOfGlowSticks));
     lb_pec_total = multiplyMapValues(lb_pec, (lb_weight * numberOfGlowSticks));
 
-
+    // Differences
+    gwp_difference = csl_gwp_total - lb_gwp_total;
+    pec_difference = csl_pec_total - lb_pec_total;
     // Percecnt Difference Values Production Imapct
-    gwp_per_diff = ((lb_gwp_total - csl_gwp_total) / (lb_gwp_total + csl_gwp_total)) * 100;
+    gwp_per_diff = ((csl_gwp_total - lb_gwp_total) / (lb_gwp_total + csl_gwp_total)) * 100;
     pec_per_diff = ((lb_pec_total - csl_pec_total) / (lb_pec_total + csl_pec_total)) * 100;
-
+    
     // Raw Values Product Impact
     csl_p = (csl_pi.get("p") + csl_pi.get("pp")) * numberOfGlowSticks;
     csl_hr = csl_pi.get("hr") * numberOfGlowSticks;
@@ -75,9 +77,9 @@ function calculateAndDisplayWaste() {
         </div>
 
         <div class="data-div">
-        <p><b>${Number(csl_p.toFixed(0)).toLocaleString()}</b> kgs plastic</p>
+        <p><b>${Number(csl_p.toFixed(2)).toLocaleString()}</b> kgs plastic</p>
         <p><b>${Number(csl_hr.toFixed(0)).toLocaleString()}</b> ml harmful chemicals</p>
-        <p><b>${Number(csl_gwp_total.toFixed(0)).toLocaleString()}</b> kg CO2</p>
+        <p><b>${Number(csl_gwp_total.toFixed(2)).toLocaleString()}</b> kg CO2</p>
         </div>
 
         <div class="header-div">
@@ -89,10 +91,10 @@ function calculateAndDisplayWaste() {
         <p class="data" style="font-size: 20px;"><b>100% reduction</b></p>
         <br>
         <p class="data">Snap Light &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Lux Bio</p>
-        <p class="data">${Number(csl_gwp_total.toFixed(0)).toLocaleString()} kg &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ${0} kg</p>
+        <p class="data">${Number(csl_p.toFixed(2)).toLocaleString()} kg &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ${0} kg</p>
         <br>
         <div class="yellow-circle">
-        <p class="data"><b>save x kg plastic</b></p>
+        <p class="data"><b>save ${Number(csl_p.toFixed(2)).toLocaleString()} kg plastic</b></p>
         <p class="data"><b>(100% reduction)</b></p>
         </div>
         <br>
@@ -104,11 +106,11 @@ function calculateAndDisplayWaste() {
         <p class="data" style="font-size: 20px;"><b>100% reduction</b></p>
         <br>
         <p class="data">Snap Light &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Lux Bio</p>
-        <p class="data">${Number(csl_gwp_total.toFixed(0)).toLocaleString()} kg &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ${0} kg</p>
+        <p class="data">${Number(csl_gwp_total.toFixed(2)).toLocaleString()} kg &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ${Number(lb_gwp_total.toFixed(2)).toLocaleString()} kg</p>
         <br>
         <div class="yellow-circle">
-        <p class="data"><b>save x kg CO2</b></p>
-        <p class="data"><b>(100% reduction)</b></p>
+        <p class="data"><b>save ${Number(gwp_difference.toFixed(2)).toLocaleString()} kg CO2</b></p>
+        <p class="data"><b>(${Number(gwp_per_diff.toFixed(0)).toLocaleString()}% reduction)</b></p>
         </div>
         <br>
         <div id="chart2"></div>
