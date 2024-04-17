@@ -122,7 +122,7 @@ function calculateAndDisplayWaste() {
 
         <div class="side-by-side">
         <div class="graph-div" style="width:50%; float:left;">
-        <p class="data" style="font-size: 20px;"><b>Plastic Pollution</b></p>
+        <p class="data" style="font-size: 20px;"><b>Chemical Pollution</b></p>
         <p class="data" style="font-size: 20px;"><b>100% reduction</b></p>
         <br>
         <p class="data">Snap Light &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Lux Bio</p>
@@ -137,7 +137,7 @@ function calculateAndDisplayWaste() {
         </div>
 
         <div class="graph-div" style="width:50%; float:right;">
-        <p class="data" style="font-size: 20px;"><b>Carbon Emissions</b></p>
+        <p class="data" style="font-size: 20px;"><b>Primary Energy</b></p>
         <p class="data" style="font-size: 20px;"><b>100% reduction</b></p>
         <br>
         <p class="data">Snap Light &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Lux Bio</p>
