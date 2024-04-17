@@ -86,6 +86,7 @@ function calculateAndDisplayWaste() {
         <h3>We can reduce your impact by ~92%</h3>
         </div>
 
+        <div class="side-by-side">
         <div class="graph-div" style="width:50%; float:left;">
         <p class="data" style="font-size: 20px;"><b>Plastic Pollution</b></p>
         <p class="data" style="font-size: 20px;"><b>100% reduction</b></p>
@@ -115,8 +116,42 @@ function calculateAndDisplayWaste() {
         <br>
         <div id="chart2"></div>
         </div>
+        </div>
 
         <br>
+
+        <div class="side-by-side">
+        <div class="graph-div" style="width:50%; float:left;">
+        <p class="data" style="font-size: 20px;"><b>Plastic Pollution</b></p>
+        <p class="data" style="font-size: 20px;"><b>100% reduction</b></p>
+        <br>
+        <p class="data">Snap Light &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Lux Bio</p>
+        <p class="data">${Number(csl_p.toFixed(2)).toLocaleString()} kg &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ${0} kg</p>
+        <br>
+        <div class="yellow-circle">
+        <p class="data"><b>save ${Number(csl_p.toFixed(2)).toLocaleString()} kg plastic</b></p>
+        <p class="data"><b>(100% reduction)</b></p>
+        </div>
+        <br>
+        <div id="chart3"></div>
+        </div>
+
+        <div class="graph-div" style="width:50%; float:right;">
+        <p class="data" style="font-size: 20px;"><b>Carbon Emissions</b></p>
+        <p class="data" style="font-size: 20px;"><b>100% reduction</b></p>
+        <br>
+        <p class="data">Snap Light &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Lux Bio</p>
+        <p class="data">${Number(csl_gwp_total.toFixed(2)).toLocaleString()} kg &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ${Number(lb_gwp_total.toFixed(2)).toLocaleString()} kg</p>
+        <br>
+        <div class="yellow-circle">
+        <p class="data"><b>save ${Number(gwp_difference.toFixed(2)).toLocaleString()} kg CO2</b></p>
+        <p class="data"><b>(${Number(gwp_per_diff.toFixed(0)).toLocaleString()}% reduction)</b></p>
+        </div>
+        <br>
+        <div id="chart4"></div>
+        </div>
+        </div>
+
         <br>
 
         <div id="email-page">
@@ -139,10 +174,18 @@ function calculateAndDisplayWaste() {
     const chart2Div = document.getElementById("chart2");
     chart2Div.innerHTML = `<canvas id="pecChart"></canvas>`
 
+    const chart3Div = document.getElementById("chart3");
+    chart3Div.innerHTML = `<canvas id="cpChart"></canvas>`
+
+    const chart4Div = document.getElementById("chart4");
+    chart4Div.innerHTML = `<canvas id="peChart"></canvas>`
+
     initCharts();
 
     updateChart(gwpChart, [csl_gwp_total, lb_gwp_total]);
     updateChart(pecChart, [csl_pec_total, lb_pec_total]);
+    updateChart(cpChart, [5, 10]);
+    updateChart(peChart, [5, 90]);
 }
 
 function initCharts() {
@@ -231,17 +274,88 @@ function initCharts() {
             }
         }
     });
+
+    const cpCtx = document.getElementById('cpChart').getContext('2d');
+    cpChart = new Chart(cpCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Cyulum Snap Lights', 'Lux Bio Glow'],
+            datasets: [{
+                label: 'Global Warming Potential (kg CO2)',
+                data: [], // Initialize with empty data
+                backgroundColor: ['rgba(10, 10, 10, 0.2)', 'rgba(10, 10, 10, 0.2)'],
+                borderColor: ['rgba(0, 0, 0, 1)', 'rgba(0, 0, 0, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Chemical Pollution',
+                    font: { size: 18 }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'kg CO2'
+                    },
+                    grid: {
+                        display: false // Remove the background grid
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false // Remove the background grid
+                    }
+                }
+            }
+        }
+    });
+
+    const peCtx = document.getElementById('peChart').getContext('2d');
+    peChart = new Chart(peCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Cyulum Snap Lights', 'Lux Bio Glow'],
+            datasets: [{
+                label: 'Global Warming Potential (kg CO2)',
+                data: [], // Initialize with empty data
+                backgroundColor: ['rgba(10, 10, 10, 0.2)', 'rgba(10, 10, 10, 0.2)'],
+                borderColor: ['rgba(0, 0, 0, 1)', 'rgba(0, 0, 0, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Primary Energy',
+                    font: { size: 18 }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'kg CO2'
+                    },
+                    grid: {
+                        display: false // Remove the background grid
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false // Remove the background grid
+                    }
+                }
+            }
+        }
+    });
 }
-
-
-
-{/* <p style="font-size: 20px;"><strong>Global Warming Potential (kg CO2):</strong></p>
-<p style="font-size: 20px;">Cyulum Snap Lights: ${Number(csl_gwp_total.toFixed(0)).toLocaleString()} kg</p>
-<p style="font-size: 20px;">Lux Bio Glow: ${Number(lb_gwp_total.toFixed(0)).toLocaleString()} kg<p>
-<p style="font-size: 20px;">Percent Difference: ${Number(gwp_per_diff.toFixed(0)).toLocaleString()}%<p>
-<p style="font-size: 20px;"><strong>Primary Energy Consumption (MJ):</strong></p>
-<p style="font-size: 20px;">Cyulum Snap Lights: ${Number(csl_pec_total.toFixed(0)).toLocaleString()} MJ</p>
-<p style="font-size: 20px;">Lux Bio Glow: ${Number(lb_pec_total.toFixed(0)).toLocaleString()} MJ<p>
-<p style="font-size: 20px;">Percent Difference: ${Number(pec_per_diff.toFixed(0)).toLocaleString()}%<p>
-<p style="font-size: 20px;"><strong>Competitor Plastic Usage (kg):</strong> ${Number(csl_p.toFixed(0)).toLocaleString()} kg</p>
-<p style="font-size: 20px;"><strong>Competitor Harmful Reagents (ml):</strong> ${Number(csl_hr.toFixed(0)).toLocaleString()} ml</p> */}
