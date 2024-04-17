@@ -27,8 +27,8 @@ function calculateAndDisplayWaste() {
     const lb_weight = 20 / 1000; // kg/product PLACEHOLDER VALUE
 
     const csl_pi = new Map([ // Cyulum snap lights product impact
-        ["p", 15], // g
-        ["pp", 2], // g
+        ["p", 0.015], // g
+        ["pp", 0.002], // g
         ["hr", 10.6] // ml
     ])
 
@@ -64,9 +64,9 @@ function calculateAndDisplayWaste() {
     gwp_difference = csl_gwp_total - lb_gwp_total;
     pec_difference = csl_pec_total - lb_pec_total;
     // Percecnt Difference Values Production Imapct
-    gwp_per_diff = ((lb_gwp_total - csl_gwp_total) / (lb_gwp_total + csl_gwp_total)) * 100;
+    gwp_per_diff = ((csl_gwp_total - lb_gwp_total) / (lb_gwp_total + csl_gwp_total)) * 100;
     pec_per_diff = ((lb_pec_total - csl_pec_total) / (lb_pec_total + csl_pec_total)) * 100;
-
+    
     // Raw Values Product Impact
     csl_p = (csl_pi.get("p") + csl_pi.get("pp")) * numberOfGlowSticks;
     csl_hr = csl_pi.get("hr") * numberOfGlowSticks;
@@ -77,7 +77,7 @@ function calculateAndDisplayWaste() {
         </div>
 
         <div class="data-div">
-        <p><b>${Number(csl_p.toFixed(0)).toLocaleString()}</b> kgs plastic</p>
+        <p><b>${Number(csl_p.toFixed(2)).toLocaleString()}</b> kgs plastic</p>
         <p><b>${Number(csl_hr.toFixed(0)).toLocaleString()}</b> ml harmful chemicals</p>
         <p><b>${Number(csl_gwp_total.toFixed(2)).toLocaleString()}</b> kg CO2</p>
         </div>
@@ -111,7 +111,7 @@ function calculateAndDisplayWaste() {
         <br>
         <div class="yellow-circle">
         <p class="data"><b>save ${Number(gwp_difference.toFixed(2)).toLocaleString()} kg CO2</b></p>
-        <p class="data"><b>(100% reduction)</b></p>
+        <p class="data"><b>(${Number(gwp_per_diff.toFixed(0)).toLocaleString()}% reduction)</b></p>
         </div>
         <br>
         <div id="chart2">
