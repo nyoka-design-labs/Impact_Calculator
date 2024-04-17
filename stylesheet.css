@@ -41,6 +41,7 @@ button:hover {
 
 #result {
     margin-top: 20px;
+    height: max-content;
 }
 
 h3 {
@@ -83,4 +84,23 @@ h3 {
     padding-top: 10px;
     margin-left: 20px;
     margin-right: 20px;
+}
+
+#email-page {
+    background-color: black;
+    color: white;
+    border-radius: 25px;
+    margin-top: 370px;
+    margin-left: 10;
+    margin-right: 10;
+    padding: 40px 40px 40px 40px;
+    text-align: center;
+}
+
+.form {
+    background-color: black;
+    color: white;
+    border-radius: 25px;
+    border: 5px solid white;
+    height: 25px;
 }

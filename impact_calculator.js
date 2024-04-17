@@ -96,8 +96,7 @@ function calculateAndDisplayWaste() {
         <p class="data"><b>(100% reduction)</b></p>
         </div>
         <br>
-        <div id="chart1">
-        </div>
+        <div id="chart1"></div>
         </div>
 
         <div class="graph-div" style="width:50%; float:right;">
@@ -112,8 +111,18 @@ function calculateAndDisplayWaste() {
         <p class="data"><b>(100% reduction)</b></p>
         </div>
         <br>
-        <div id="chart2">
+        <div id="chart2"></div>
         </div>
+
+        <br>
+        <br>
+
+        <div id="email-page">
+        <h2>you'll be <u>eliminating</u> single use plastic, <u>eliminating</u> harmful chemicals, and reducing your overall impact by <u>92%</u> by switching to Lux Bio</h2>
+        <p>Get your custom impact report with more metrics including primary energy consumption and acidification potential, along with a more in-depth discussion and relevant citations you can share with your team here</p>
+        <input class="form" type="text" id="company-input" placeholder="Name">
+        <input class="form" type="email" id="email-input" placeholder="Email">
+        <button id="email-button">Get my report</button>
         </div>
     `;
 
