@@ -159,9 +159,9 @@
             const lb_weight = 20 / 1000; // kg/product PLACEHOLDER VALUE
 
             const csl_pi = new Map([ // Cyulum snap lights product impact
-                ["p", 0.015], // g
-                ["pp", 0.002], // g
-                ["hr", 10.6] // ml
+                ["p", 0.015], // kg
+                ["pp", 0.002], // kg
+                ["hr", 0.0106] // L
             ])
 
             const csl_gwp = new Map([ // Cyulum snap lights global warming potential (kg CO2/kg product)
@@ -197,7 +197,9 @@
             pec_difference = csl_pec_total - lb_pec_total;
             // Percecnt Difference Values Production Imapct
             gwp_per_diff = ((csl_gwp_total - lb_gwp_total) / (lb_gwp_total + csl_gwp_total)) * 100;
-            pec_per_diff = ((lb_pec_total - csl_pec_total) / (lb_pec_total + csl_pec_total)) * 100;
+            pec_per_diff = ((csl_pec_total - lb_pec_total) / (lb_pec_total + csl_pec_total)) * 100;
+            gwp_per_red = ((csl_gwp_total - lb_gwp_total) / (csl_gwp_total)) * 100;
+            pec_per_red = ((csl_pec_total - lb_pec_total) / (csl_pec_total)) * 100;
             
             // Raw Values Product Impact
             csl_p = (csl_pi.get("p") + csl_pi.get("pp")) * numberOfGlowSticks;
@@ -210,12 +212,12 @@
 
                 <div class="data-div">
                 <p><b>${Number(csl_p.toFixed(2)).toLocaleString()}</b> kgs plastic</p>
-                <p><b>${Number(csl_hr.toFixed(0)).toLocaleString()}</b> ml harmful chemicals</p>
+                <p><b>${Number(csl_hr.toFixed(2)).toLocaleString()}</b> ml harmful chemicals</p>
                 <p><b>${Number(csl_gwp_total.toFixed(2)).toLocaleString()}</b> kg CO2</p>
                 </div>
 
                 <div class="header-div">
-                <h3>We can reduce your impact by ~80%</h3>
+                <h3>We can reduce your impact by ~87%</h3>
                 </div>
 
                 <div class="side-by-side">
@@ -235,7 +237,7 @@
 
                 <div class="graph-div" style="width:50%; float:right;">
                 <p class="data" style="font-size: 20px;"><b>Carbon Emissions</b></p>
-                <p class="data" style="font-size: 20px;"><b>100% reduction</b></p>
+                <p class="data" style="font-size: 20px;"><b>${Number(gwp_per_red.toFixed(0)).toLocaleString()}% reduction</b></p>
                 <br>
                 <p class="data">Snap Light &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Lux Bio</p>
                 <p class="data">${Number(csl_gwp_total.toFixed(2)).toLocaleString()} kg &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ${Number(lb_gwp_total.toFixed(2)).toLocaleString()} kg</p>
@@ -256,10 +258,10 @@
                 <p class="data" style="font-size: 20px;"><b>100% reduction</b></p>
                 <br>
                 <p class="data">Snap Light &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Lux Bio</p>
-                <p class="data">${Number(csl_p.toFixed(2)).toLocaleString()} kg &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ${0} kg</p>
+                <p class="data">${Number(csl_hr.toFixed(2)).toLocaleString()} L &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ${0} L</p>
                 <br>
                 <div class="yellow-circle">
-                <p class="data"><b>save ${Number(csl_p.toFixed(2)).toLocaleString()} kg plastic</b></p>
+                <p class="data"><b>remove ${Number(csl_hr.toFixed(2)).toLocaleString()} L of harmful chemicals</b></p>
                 </div>
                 <br>
                 <div id="chart3"></div>
@@ -267,13 +269,13 @@
 
                 <div class="graph-div" style="width:50%; float:right;">
                 <p class="data" style="font-size: 20px;"><b>Primary Energy</b></p>
-                <p class="data" style="font-size: 20px;"><b>100% reduction</b></p>
+                <p class="data" style="font-size: 20px;"><b>${Number(pec_per_red.toFixed(0)).toLocaleString()}% reduction</b></p>
                 <br>
                 <p class="data">Snap Light &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Lux Bio</p>
-                <p class="data">${Number(csl_gwp_total.toFixed(2)).toLocaleString()} kg &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ${Number(lb_gwp_total.toFixed(2)).toLocaleString()} kg</p>
+                <p class="data">${Number(csl_pec_total.toFixed(2)).toLocaleString()} MJ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ${Number(lb_pec_total.toFixed(2)).toLocaleString()} MJ</p>
                 <br>
                 <div class="yellow-circle">
-                <p class="data"><b>save ${Number(gwp_difference.toFixed(2)).toLocaleString()} kg CO2</b></p>
+                <p class="data"><b>save ${Number(pec_difference.toFixed(2)).toLocaleString()} MJ</b></p>
                 </div>
                 <br>
                 <div id="chart4"></div>
@@ -287,10 +289,10 @@
             resultDiv.innerHTML = resultHTML;
 
             const chart1Div = document.getElementById("chart1");
-            chart1Div.innerHTML = `<canvas id="gwpChart"></canvas>`
+            chart1Div.innerHTML = `<canvas id="pecChart"></canvas>`
 
             const chart2Div = document.getElementById("chart2");
-            chart2Div.innerHTML = `<canvas id="pecChart"></canvas>`
+            chart2Div.innerHTML = `<canvas id="gwpChart"></canvas>`
 
             const chart3Div = document.getElementById("chart3");
             chart3Div.innerHTML = `<canvas id="cpChart"></canvas>`
@@ -300,8 +302,8 @@
 
             initCharts();
 
+            updateChart(pecChart, [csl_p, 0]);
             updateChart(gwpChart, [csl_gwp_total, lb_gwp_total]);
-            updateChart(pecChart, [2*numberOfGlowSticks/1000, 0]);
             updateChart(cpChart, [10.6*numberOfGlowSticks/1000, 0]);
             updateChart(peChart, [csl_pec_total, lb_pec_total]);
         }
@@ -357,7 +359,7 @@
                 data: {
                     labels: ['Cyulum Snap Lights', 'Lux Bio Glow'],
                     datasets: [{
-                        label: 'Primary Energy Consumption (MJ)',
+                        label: 'Plastic Pollution (Kg)',
                         data: [], // Initialize with empty data
                         backgroundColor: ['rgba(10, 10, 10, 0.2)', 'rgba(10, 10, 10, 0.2)'],
                         borderColor: ['rgba(0, 0, 0, 1)', 'rgba(0, 0, 0, 1)'],
@@ -369,7 +371,7 @@
                         legend: { display: false },
                         title: {
                             display: true,
-                            text: 'Carbon Emissions',
+                            text: 'Plastic Polution',
                             font: { size: 18 }
                         }
                     },
@@ -378,7 +380,7 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'MJ'
+                                text: 'kg'
                             },
                             grid: {
                                 display: false // Remove the background grid
@@ -399,7 +401,7 @@
                 data: {
                     labels: ['Cyulum Snap Lights', 'Lux Bio Glow'],
                     datasets: [{
-                        label: 'Global Warming Potential (kg CO2)',
+                        label: 'Chemical Pollution (L)',
                         data: [], // Initialize with empty data
                         backgroundColor: ['rgba(10, 10, 10, 0.2)', 'rgba(10, 10, 10, 0.2)'],
                         borderColor: ['rgba(0, 0, 0, 1)', 'rgba(0, 0, 0, 1)'],
@@ -420,7 +422,7 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'kg CO2'
+                                text: 'L'
                             },
                             grid: {
                                 display: false // Remove the background grid
@@ -441,7 +443,7 @@
                 data: {
                     labels: ['Cyulum Snap Lights', 'Lux Bio Glow'],
                     datasets: [{
-                        label: 'Global Warming Potential (kg CO2)',
+                        label: 'Primary Energy Consumption (MJ)',
                         data: [], // Initialize with empty data
                         backgroundColor: ['rgba(10, 10, 10, 0.2)', 'rgba(10, 10, 10, 0.2)'],
                         borderColor: ['rgba(0, 0, 0, 1)', 'rgba(0, 0, 0, 1)'],
@@ -453,7 +455,7 @@
                         legend: { display: false },
                         title: {
                             display: true,
-                            text: 'Primary Energy',
+                            text: 'Primary Energy Consumption',
                             font: { size: 18 }
                         }
                     },
@@ -462,7 +464,7 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'kg CO2'
+                                text: 'MJ'
                             },
                             grid: {
                                 display: false // Remove the background grid
